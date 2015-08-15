@@ -1,12 +1,8 @@
-var React, HelloWorld, body,
+var React, Canvas, body;
 
 React = require('react');
-HelloWorld = React.createClass({
-    render: function () {
-        return <div>Hello, world!</div>;
-    }
-});
+Canvas = require('./canvas');
 
 body = document.getElementsByTagName('body')[0];
 
-React.render(<HelloWorld />, body);
+React.render(<Canvas width="500" height="500" />, body);
