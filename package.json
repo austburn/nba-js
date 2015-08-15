@@ -1,0 +1,27 @@
+{
+  "name": "nba-js",
+  "version": "1.0.0",
+  "description": "NBA analytics in JavaScript.",
+  "main": "index.js",
+  "scripts": {
+    "server": "npm run build && node server.js",
+    "build": "browserify app/app.js --transform reactify --outfile ./dist/app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/austburn/nba-js.git"
+  },
+  "author": "Austin Burnett",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/austburn/nba-js/issues"
+  },
+  "homepage": "https://github.com/austburn/nba-js",
+  "devDependencies": {
+    "browserify": "^11.0.1",
+    "express": "^4.13.3",
+    "raphael": "^2.1.4",
+    "react": "^0.13.3",
+    "reactify": "^1.1.1"
+  }
+}
