@@ -1,7 +1,7 @@
 var React, Canvas, body;
 
 React = require('react');
-Canvas = require('./canvas');
+Canvas = require('./raphael/canvas');
 
 body = document.getElementsByTagName('body')[0];
 

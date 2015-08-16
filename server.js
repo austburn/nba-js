@@ -12,4 +12,6 @@ app.get('/app.js', function (req, res) {
     res.sendFile(__dirname + '/dist/app.js');
 });
 
-app.listen(3030);
+app.listen(3030, function () {
+    console.log('Server running on localhost:3030');
+});
