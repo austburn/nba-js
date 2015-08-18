@@ -8,10 +8,10 @@ Canvas = React.createClass({
         var element, width, height;
 
         element = React.findDOMNode(this);
-        width = parseInt(this.props.width, 10);
-        height = parseInt(this.props.height, 10);
+        width = this.props.data.width;
+        height = this.props.data.height;
 
-        Raphael('canvas', width, height);
+        Raphael(['canvas', width, height, this.props.data.court]);
     },
 
     render: function () {

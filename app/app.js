@@ -1,8 +1,8 @@
-var React, Canvas, body;
+var React, Court, body;
 
 React = require('react');
-Canvas = require('./raphael/canvas');
+Court = require('./court');
 
 body = document.getElementsByTagName('body')[0];
 
-React.render(<Canvas width="500" height="500" />, body);
+React.render(<Court />, body);
