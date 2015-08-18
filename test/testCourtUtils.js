@@ -19,6 +19,14 @@ describe('utils', function () {
                     y: 1,
                     width: 5,
                     height: 5
+                },
+                {
+                    name: 'basicPath',
+                    type: 'path',
+                    x1: 0,
+                    y1: 0,
+                    x2: 5,
+                    y2: 5
                 }
             ]
         };
@@ -41,6 +49,13 @@ describe('utils', function () {
             y: 2,
             width: 10,
             height: 10
+        });
+    });
+
+    it('should adjust and build paths', function () {
+        assert.deepEqual(adjustedCourtData.court[1], {
+            type: 'path',
+            pathString: 'M0,0L10,10'
         });
     });
 });

@@ -9,16 +9,25 @@ utils.adjustCourtData = function (courtData) {
     adjustedHeight = courtData.height * pixelsPerFoot;
 
     adjustedCourt = courtData.court.map(function (component) {
+        var raphaelComponent;
+
+        raphaelComponent = {
+            type: component.type
+        }
+
         switch (component.type) {
             case 'rect':
-                return {
-                    type: component.type,
-                    x: component.x * pixelsPerFoot,
-                    y: component.y * pixelsPerFoot,
-                    width: component.width * pixelsPerFoot,
-                    height: component.height * pixelsPerFoot
-                }
+                    raphaelComponent.x = component.x * pixelsPerFoot;
+                    raphaelComponent.y = component.y * pixelsPerFoot;
+                    raphaelComponent.width = component.width * pixelsPerFoot;
+                    raphaelComponent.height = component.height * pixelsPerFoot;
+                    break;
+            case 'path':
+                    raphaelComponent.pathString = 'M' + component.x1 * pixelsPerFoot + ',' + component.y1 * pixelsPerFoot + 'L' + component.x2 * pixelsPerFoot + ',' + component.y2 * pixelsPerFoot;
+                    break;
         }
+
+        return raphaelComponent;
     });
 
     return {
