@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "server": "npm run build && node server.js",
-    "build": "browserify app/app.js --transform reactify --outfile ./dist/app.js"
+    "build": "browserify app/app.js --transform reactify --outfile ./dist/app.js",
+    "test": "mocha test/"
   },
   "repository": {
     "type": "git",

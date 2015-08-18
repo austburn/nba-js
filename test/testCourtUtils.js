@@ -11,7 +11,7 @@ describe('utils', function () {
             pixelsPerFoot: 2,
             width: 10,
             height: 15,
-            court: [
+            components: [
                 {
                     name: 'rectangle',
                     type: 'rect',
@@ -27,6 +27,13 @@ describe('utils', function () {
                     y1: 0,
                     x2: 5,
                     y2: 5
+                },
+                {
+                    name: 'circ',
+                    type: 'circle',
+                    cx: 5,
+                    cy: 5,
+                    r: 1
                 }
             ]
         };
@@ -43,19 +50,31 @@ describe('utils', function () {
     });
 
     it('should adjust rectangles', function () {
-        assert.deepEqual(adjustedCourtData.court[0], {
+        assert.deepEqual(adjustedCourtData.components[0], {
             type: 'rect',
             x: 2,
             y: 2,
             width: 10,
-            height: 10
+            height: 10,
+            'stroke-width': 2
         });
     });
 
     it('should adjust and build paths', function () {
-        assert.deepEqual(adjustedCourtData.court[1], {
+        assert.deepEqual(adjustedCourtData.components[1], {
             type: 'path',
-            pathString: 'M0,0L10,10'
+            path: 'M0,0L10,10',
+            'stroke-width': 2
+        });
+    });
+
+    it('should adjust circles', function () {
+        assert.deepEqual(adjustedCourtData.components[2], {
+            type: 'circle',
+            cx: 10,
+            cy: 10,
+            r: 2,
+            'stroke-width': 2
         });
     });
 });

@@ -5,13 +5,16 @@ Raphael = require('raphael');
 
 Canvas = React.createClass({
     componentDidMount: function () {
-        var element, width, height;
+        var width, height, args, paper;
 
-        element = React.findDOMNode(this);
         width = this.props.data.width;
         height = this.props.data.height;
+        args = ['canvas', width, height].concat(this.props.data.components);
 
-        Raphael(['canvas', width, height, this.props.data.court]);
+        paper = Raphael(args);
+        // paper.forEach(function (el) {
+        //     el.attr({'stroke-width': 2})
+        // })
     },
 
     render: function () {

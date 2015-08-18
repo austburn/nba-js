@@ -1,13 +1,13 @@
-var React, Canvas, CourtData, Court;
+var React, Canvas, CourtData, Utils, Court;
 
 React = require('react');
-Canvas = require('./raphael/canvas');
-
+Canvas = require('../raphael/canvas');
+Utils = require('./utils')
 CourtData = {
-    pixelsPerFoot: 10,
+    pixelsPerFoot: 15,
     width: 50,
     height: 60,
-    court: [
+    components: [
         {
             name: 'boundaries',
             type: 'rect',
@@ -23,6 +23,13 @@ CourtData = {
             y1: 4,
             x2: 28,
             y2: 4
+        },
+        {
+            name: 'hoop',
+            type: 'circle',
+            cx: 25,
+            cy: 4.75,
+            r: .75
         }
     ]
 };
@@ -30,9 +37,9 @@ CourtData = {
 
 Court = React.createClass({
     render: function () {
-        var data = this.adjustCourt(CourtData);
+        var data = Utils.adjustCourtData(CourtData);
 
-        return <Canvas data={ CourtData } />;
+        return <Canvas data={ data } />;
     }
 });
 
