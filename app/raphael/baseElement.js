@@ -2,11 +2,10 @@ var BaseElement;
 
 BaseElement = function (attributes, ratio) {
     this.attributes = attributes;
-    this.checkAttributes(this.attributes);
     this.ratio = ratio;
 };
 
-BaseElement.prototype.checkAttributes = function (attributes) {
+BaseElement.prototype.checkAttributes = function () {
     if (typeof this.attributes !== 'object') {
         throw 'Attributes must be an object!';
     }
