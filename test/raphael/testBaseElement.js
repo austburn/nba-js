@@ -22,11 +22,12 @@ describe('baseElement', function() {
         }, /Attributes must be an object!/);
     });
 
-    it('throws not implemented exception', function () {
-        var element;
+    it('adjustAttributes returns adjusted object', function () {
+        var element, adjusted;
         element = new BaseElement({
-            attribute: 'attribute1'
+            attribute: 5
         });
-        assert.throws(element.adjust, /Not implemented\./);
+        adjusted = element.adjustAttributes(2)
+        assert.deepEqual(adjusted, {attribute: 10});
     });
 });

@@ -1,8 +1,7 @@
 var BaseElement;
 
-BaseElement = function (attributes, ratio) {
+BaseElement = function (attributes) {
     this.attributes = attributes;
-    this.ratio = ratio;
 };
 
 BaseElement.prototype.checkAttributes = function () {
@@ -11,8 +10,16 @@ BaseElement.prototype.checkAttributes = function () {
     }
 };
 
-BaseElement.prototype.adjust = function () {
-    throw new Error('Not implemented.');
+BaseElement.prototype.adjustAttributes = function (ratio) {
+    var newObj;
+
+    newObj = {};
+
+    for (attribute in this.attributes) {
+        newObj[attribute] = this.attributes[attribute] * ratio;
+    }
+
+    return newObj;
 };
 
 module.exports = BaseElement;
