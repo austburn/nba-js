@@ -12,9 +12,6 @@ Canvas = React.createClass({
         args = ['canvas', width, height].concat(this.props.data.components);
 
         paper = Raphael(args);
-        // paper.forEach(function (el) {
-        //     el.attr({'stroke-width': 2})
-        // })
     },
 
     render: function () {
