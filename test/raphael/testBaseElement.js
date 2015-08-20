@@ -8,8 +8,8 @@ describe('baseElement', function() {
         var element;
         element = new BaseElement('attributes');
         assert.throws(function () {
-            element.checkAttributes()
-        }, 'Attributes must be an object!');
+            element.checkAttributes();
+        }, /Attributes must be an object!/);
     });
 
     it('does not throw exception for correct attributes', function () {
@@ -18,8 +18,8 @@ describe('baseElement', function() {
             attribute: 'attribute1'
         });
         assert.doesNotThrow(function () {
-            element.checkAttributes()
-        }, 'Attributes must be an object!');
+            element.checkAttributes();
+        }, /Attributes must be an object!/);
     });
 
     it('throws not implemented exception', function () {
@@ -27,6 +27,6 @@ describe('baseElement', function() {
         element = new BaseElement({
             attribute: 'attribute1'
         });
-        assert.throws(element.adjust, 'Not implemented.');
+        assert.throws(element.adjust, /Not implemented\./);
     });
 });

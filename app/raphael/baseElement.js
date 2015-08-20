@@ -7,12 +7,12 @@ BaseElement = function (attributes, ratio) {
 
 BaseElement.prototype.checkAttributes = function () {
     if (typeof this.attributes !== 'object') {
-        throw 'Attributes must be an object!';
+        throw new Error('Attributes must be an object!');
     }
 };
 
 BaseElement.prototype.adjust = function () {
-    throw 'Not implemented.';
+    throw new Error('Not implemented.');
 };
 
 module.exports = BaseElement;
