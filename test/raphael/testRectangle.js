@@ -19,4 +19,12 @@ describe('rectangle', function() {
             rect.checkAttributes();
         }, /Unexpected attribute: 'bad'\./);
     });
+
+    it('checkAttributes does not throw exception for accepted attributes', function () {
+        var rect;
+        rect = new Rectangle({x: 0, y: 0, width: 1, height: 2});
+        assert.doesNotThrow(function () {
+            rect.checkAttributes();
+        });
+    });
 });
