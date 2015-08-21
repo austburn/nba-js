@@ -30,4 +30,31 @@ describe('baseElement', function() {
         }, /Unexpected attribute: 'bad'\./);
     });
 
+    it('toRaphaelObject adds options', function () {
+        var element, raphaelObj;
+        element = new BaseElement({x: 0, y: 0, width: 1});
+        element.elementKeys = ['x', 'y', 'width'];
+        raphaelObj = element.toRaphaelObject({'stroke-width': 2});
+        assert.deepEqual(raphaelObj, {
+            type: null,
+            x: 0,
+            y: 0,
+            width: 1,
+            'stroke-width': 2
+        });
+    });
+
+    it('toRaphaelObject adjusts and adds options', function () {
+        var element, raphaelObj;
+        element = new BaseElement({x: 1, y: 2, width: 3});
+        element.elementKeys = ['x', 'y', 'width'];
+        raphaelObj = element.toRaphaelObject({ratio: 2, 'stroke-width': 2});
+        assert.deepEqual(raphaelObj, {
+            type: null,
+            x: 2,
+            y: 4,
+            width: 6,
+            'stroke-width': 2
+        });
+    });
 });

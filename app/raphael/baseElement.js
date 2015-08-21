@@ -33,6 +33,27 @@ BaseElement.prototype.checkAttributes = function () {
     });
 };
 
+BaseElement.prototype.toRaphaelObject = function (opts) {
+    var raphael, opts;
+
+    opts = opts || {};
+    if (opts.hasOwnProperty('ratio')) {
+        raphael = this.adjustAttributes(opts.ratio);
+        delete opts['ratio']
+    } else {
+        raphael = this.attributes;
+    }
+
+    raphael.type = this.type;
+
+    for (opt in opts) {
+        raphael[opt] = opts[opt];
+    }
+
+    return raphael;
+};
+
 BaseElement.prototype.elementKeys = [];
+BaseElement.prototype.type = null;
 
 module.exports = BaseElement;
