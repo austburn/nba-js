@@ -9,27 +9,8 @@ utils.adjustCourtData = function (courtData) {
     adjustedHeight = courtData.height * pixelsPerFoot;
 
     adjustedComponents = courtData.components.map(function (component) {
-        var raphaelComponent, opts;
-
-        raphaelComponent = {
-            type: component.type,
-            'stroke-width': 2
-        }
-
-        opts = {'stroke-width': 2, ratio: pixelsPerFoot};
-
-        switch (component.type) {
-            case 'path':
-                raphaelComponent.path = 'M' + component.x1 * pixelsPerFoot + ',' + component.y1 * pixelsPerFoot + 'L' + component.x2 * pixelsPerFoot + ',' + component.y2 * pixelsPerFoot;
-                break;
-            case 'circle':
-                raphaelComponent = component.toRaphaelObject(opts);
-                break;
-            case 'rect':
-                raphaelComponent = component.toRaphaelObject(opts);
-                break;
-        }
-
+        var raphaelComponent;
+        raphaelComponent = component.toRaphaelObject({'stroke-width': 2, ratio: pixelsPerFoot});
         return raphaelComponent;
     });
 

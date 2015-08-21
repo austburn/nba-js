@@ -1,8 +1,9 @@
-var utils, Rectangle, Circle, assert;
+var utils, Rectangle, Circle, Path, assert;
 
 utils = require('../app/court/utils');
 Rectangle = require('../app/raphael/rectangle');
 Circle = require('../app/raphael/circle');
+Path = require('../app/raphael/path');
 assert = require('assert');
 
 describe('utils', function () {
@@ -15,14 +16,7 @@ describe('utils', function () {
             height: 15,
             components: [
                 new Rectangle({x: 1, y: 1, width: 5, height: 5}),
-                {
-                    name: 'basicPath',
-                    type: 'path',
-                    x1: 0,
-                    y1: 0,
-                    x2: 5,
-                    y2: 5
-                },
+                new Path({x1: 0, y1: 0, x2: 5, y2: 5}),
                 new Circle({cx: 5, cy: 5, r: 1})
             ]
         };
