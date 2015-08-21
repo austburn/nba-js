@@ -4,12 +4,6 @@ BaseElement = function (attributes) {
     this.attributes = attributes;
 };
 
-BaseElement.prototype.checkAttributes = function () {
-    if (typeof this.attributes !== 'object') {
-        throw new Error('Attributes must be an object!');
-    }
-};
-
 BaseElement.prototype.adjustAttributes = function (ratio) {
     var newObj;
 
@@ -21,5 +15,24 @@ BaseElement.prototype.adjustAttributes = function (ratio) {
 
     return newObj;
 };
+
+BaseElement.prototype.checkAttributes = function () {
+    var expectedKeys, attributeKeys;
+
+    expectedKeys = this.elementKeys.sort();
+    attributeKeys = Object.keys(this.attributes).sort();
+
+    if (attributeKeys.length !== expectedKeys.length) {
+        throw 'Element does not have the expected number of keys.';
+    }
+
+    expectedKeys.forEach(function (key, index) {
+        if (key !== attributeKeys[index]) {
+            throw 'Unexpected attribute: \'' + attributeKeys[index] + '\'.'
+        }
+    });
+};
+
+BaseElement.prototype.elementKeys = [];
 
 module.exports = BaseElement;

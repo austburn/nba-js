@@ -7,23 +7,6 @@ Rectangle = function (attributes) {
 };
 Rectangle.prototype = Object.create(BaseElement.prototype);
 
-Rectangle.prototype.checkAttributes = function () {
-    var expectedKeys, attributeKeys;
-
-    expectedKeys = ['x', 'y', 'width', 'height'].sort();
-    attributeKeys = Object.keys(this.attributes).sort();
-
-    if (attributeKeys.length !== expectedKeys.length) {
-        throw 'Rectangle does not have the expected number of keys.';
-    }
-
-    expectedKeys.forEach(function (key, index) {
-        if (key !== attributeKeys[index]) {
-            throw 'Unexpected attribute: \'' + attributeKeys[index] + '\'.'
-        }
-    });
-};
-
 Rectangle.prototype.toRaphaelObject = function (opts) {
     var raphael, opts;
 
@@ -45,5 +28,6 @@ Rectangle.prototype.toRaphaelObject = function (opts) {
 }
 
 Rectangle.prototype.type = 'rect';
+Rectangle.prototype.elementKeys = ['x', 'y', 'height', 'width'];
 
 module.exports = Rectangle;
