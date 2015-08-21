@@ -19,6 +19,10 @@ BaseElement.prototype.adjustAttributes = function (ratio) {
 BaseElement.prototype.checkAttributes = function () {
     var expectedKeys, attributeKeys;
 
+    if (this.type === null) {
+        throw 'Must define a type.';
+    }
+
     expectedKeys = this.elementKeys.sort();
     attributeKeys = Object.keys(this.attributes).sort();
 
@@ -35,6 +39,12 @@ BaseElement.prototype.checkAttributes = function () {
 
 BaseElement.prototype.toRaphaelObject = function (opts) {
     var raphael, opts;
+
+    try {
+        this.checkAttributes();
+    } catch (e) {
+        throw e;
+    }
 
     opts = opts || {};
     if (opts.hasOwnProperty('ratio')) {

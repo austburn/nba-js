@@ -10,12 +10,24 @@ describe('baseElement', function() {
             attribute: 5
         });
         adjusted = element.adjustAttributes(2)
+
         assert.deepEqual(adjusted, {attribute: 10});
+    });
+
+    it('checkAttributes throws exception if type is not set', function () {
+        var element;
+        element = new BaseElement({attribute: 'attribute1'});
+
+        assert.throws(function () {
+            element.checkAttributes();
+        }, /Must define a type\./);
     });
 
     it('checkAttributes throws exception if there are the wrong number of attributes', function () {
         var element;
         element = new BaseElement({attribute: 'attribute1'});
+        element.type = 'element';
+
         assert.throws(function () {
             element.checkAttributes();
         }, /Element does not have the expected number of keys\./);
@@ -24,7 +36,9 @@ describe('baseElement', function() {
     it('checkAttributes throws exception if there are invalid attributes', function () {
         var element;
         element = new BaseElement({x: 0, y: 0, bad: 1});
+        element.type = 'element';
         element.elementKeys = ['x', 'y', 'width'];
+
         assert.throws(function () {
             element.checkAttributes();
         }, /Unexpected attribute: 'bad'\./);
@@ -33,10 +47,12 @@ describe('baseElement', function() {
     it('toRaphaelObject adds options', function () {
         var element, raphaelObj;
         element = new BaseElement({x: 0, y: 0, width: 1});
+        element.type = 'element';
         element.elementKeys = ['x', 'y', 'width'];
         raphaelObj = element.toRaphaelObject({'stroke-width': 2});
+
         assert.deepEqual(raphaelObj, {
-            type: null,
+            type: 'element',
             x: 0,
             y: 0,
             width: 1,
@@ -47,10 +63,12 @@ describe('baseElement', function() {
     it('toRaphaelObject adjusts and adds options', function () {
         var element, raphaelObj;
         element = new BaseElement({x: 1, y: 2, width: 3});
+        element.type = 'element';
         element.elementKeys = ['x', 'y', 'width'];
         raphaelObj = element.toRaphaelObject({ratio: 2, 'stroke-width': 2});
+
         assert.deepEqual(raphaelObj, {
-            type: null,
+            type: 'element',
             x: 2,
             y: 4,
             width: 6,
