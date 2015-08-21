@@ -60,8 +60,23 @@ BaseElement.prototype.toRaphaelObject = function (opts) {
         raphael[opt] = opts[opt];
     }
 
+    if (this.transformRaphaelObject !== null && typeof this.transformRaphaelObject === 'function') {
+        raphael = this.transformRaphaelObject(raphael);
+    }
+
     return raphael;
 };
+
+/**
+    Essentially a hook for subclasses (currently only Path will use this).
+
+    Reason: I like toRaphaelObject and don't want to dupe the code as the core
+    functionality applies to the Raphael Path. The difference is that I have to
+    transform the Path params into a path string.
+
+    Based on: http://martinfowler.com/bliki/CallSuper.html
+*/
+BaseElement.prototype.transformRaphaelObject = null;
 
 BaseElement.prototype.elementKeys = [];
 BaseElement.prototype.type = null;

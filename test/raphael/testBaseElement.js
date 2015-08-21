@@ -75,4 +75,25 @@ describe('baseElement', function() {
             'stroke-width': 2
         });
     });
+
+    it('transformRaphaelObject is called', function () {
+        var element, raphaelObj;
+        element = new BaseElement({x: 1, y: 2, width: 3});
+        element.type = 'element';
+        element.elementKeys = ['x', 'y', 'width'];
+        element.transformRaphaelObject = function (obj) {
+            obj.type = 'iTransform';
+            return obj;
+        };
+
+        raphaelObj = element.toRaphaelObject({ratio: 2, 'stroke-width': 2});
+
+        assert.deepEqual(raphaelObj, {
+            type: 'iTransform',
+            x: 2,
+            y: 4,
+            width: 6,
+            'stroke-width': 2
+        });
+    });
 });
