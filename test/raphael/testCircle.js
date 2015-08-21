@@ -5,17 +5,17 @@ assert = require('assert');
 
 describe('circle', function() {
     it('checkAttributes does not throw exception for accepted attributes', function () {
-        var rect;
-        rect = new Circle({cx: 2, cy: 2, r: 3});
+        var circle;
+        circle = new Circle({cx: 2, cy: 2, r: 3});
         assert.doesNotThrow(function () {
-            rect.checkAttributes();
+            circle.checkAttributes();
         });
     });
 
     it('toRaphaelObject adds type', function () {
-        var rect, raphaelObj;
-        rect = new Circle({cx: 2, cy: 2, r: 3});
-        raphaelObj = rect.toRaphaelObject();
+        var circle, raphaelObj;
+        circle = new Circle({cx: 2, cy: 2, r: 3});
+        raphaelObj = circle.toRaphaelObject();
         assert.deepEqual(raphaelObj, {
             type: 'circle',
             cx: 2,
