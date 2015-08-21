@@ -23,9 +23,7 @@ utils.adjustCourtData = function (courtData) {
                 raphaelComponent.path = 'M' + component.x1 * pixelsPerFoot + ',' + component.y1 * pixelsPerFoot + 'L' + component.x2 * pixelsPerFoot + ',' + component.y2 * pixelsPerFoot;
                 break;
             case 'circle':
-                raphaelComponent.cx = component.cx * pixelsPerFoot;
-                raphaelComponent.cy = component.cy * pixelsPerFoot;
-                raphaelComponent.r = component.r * pixelsPerFoot;
+                raphaelComponent = component.toRaphaelObject(opts);
                 break;
             case 'rect':
                 raphaelComponent = component.toRaphaelObject(opts);

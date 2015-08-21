@@ -1,7 +1,8 @@
-var utils, Rectangle, assert;
+var utils, Rectangle, Circle, assert;
 
 utils = require('../app/court/utils');
-Rectangle = require('../app/raphael/rectangle')
+Rectangle = require('../app/raphael/rectangle');
+Circle = require('../app/raphael/circle');
 assert = require('assert');
 
 describe('utils', function () {
@@ -22,13 +23,7 @@ describe('utils', function () {
                     x2: 5,
                     y2: 5
                 },
-                {
-                    name: 'circ',
-                    type: 'circle',
-                    cx: 5,
-                    cy: 5,
-                    r: 1
-                }
+                new Circle({cx: 5, cy: 5, r: 1})
             ]
         };
 

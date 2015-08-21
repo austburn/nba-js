@@ -1,14 +1,18 @@
-var React, Canvas, CourtData, Utils, Rectangle, Court;
+var React, Canvas, CourtData, Utils, Rectangle,
+    Circle, Court;
 
 React = require('react');
 Canvas = require('../raphael/canvas');
 Utils = require('./utils');
 Rectangle = require('../raphael/rectangle');
+Circle = require('../raphael/circle');
+
 CourtData = {
     pixelsPerFoot: 15,
     width: 50,
     height: 60,
     components: [
+        // Boundaries
         new Rectangle({x: 0, y: 0, width: 50, height: 60}),
         {
             /** Backboard */
@@ -18,13 +22,8 @@ CourtData = {
             x2: 28,
             y2: 4
         },
-        {
-            /** Hoop */
-            type: 'circle',
-            cx: 25,
-            cy: 4.75,
-            r: .75
-        }
+        // Hoop
+        new Circle({cx: 25, cy: 4.75, r: .75})
     ]
 };
 
