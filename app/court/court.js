@@ -28,7 +28,7 @@ CourtData = {
         // Paint
         new Michaelangelo.Rectangle({x: 17, y: 0, width: 16, height: 19}, opts),
         // Arc
-        new Michaelangelo.Arc({x: 25, y: 14, width: 44, height: 23.75}, opts)
+        new Michaelangelo.Arc({x: 25, y: 14, width: 44, height: 23.75, theta1: 180, theta2: 360}, opts)
     ]
 };
 
