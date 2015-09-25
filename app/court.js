@@ -51,6 +51,8 @@ Court = React.createClass({
       nbaStatsScale = 10;
       scaleRatio = canvasScale / nbaStatsScale;
 
+      madeX = [];
+      madeY = [];
       svg = d3.select('#canvas').select('svg');
       d3.json("http://localhost:3030/data?id=201935", function (err, json) {
         var headers, shotData, xIndex, yIndex, shotMadeIndex;
@@ -66,7 +68,12 @@ Court = React.createClass({
 
           x = (shot[xIndex] + 250) * scaleRatio;
           y = (shot[yIndex] + 40) * scaleRatio;
-          fill = shot[shotMadeIndex] ? '#c0392b' : '#27ae60';
+          shotMade = shot[shotMadeIndex];
+          fill = shotMade ? '#c0392b' : '#27ae60';
+          if (shotMade) {
+            madeX.push(x);
+            madeY.push(y);
+          }
 
           svg.append('circle')
             .attr('r', 3.5)
@@ -78,6 +85,38 @@ Court = React.createClass({
               'stroke-width': '1px'
             });
         });
+        xHisto = d3.layout.histogram()
+                  .bins(50)
+                  (madeX);
+
+        yHisto = d3.layout.histogram()
+                  .bins(60)
+                  (madeY);
+
+        xHistoSvg = d3.select('body').append('svg').attr('width', 750).attr('height', 700);
+        bar = xHistoSvg.selectAll('g').data(xHisto).enter().append('g');
+        start = -15;
+        bar.append('rect')
+          .attr('x', function () {
+            return start += 15;
+          })
+          .attr('width', 15)
+          .attr('height', function (d) {
+            return d.length * 3;
+          });
+
+        yHistoSvg = d3.select('body').append('svg').attr('width', 750).attr('height', 900).style({'top': 8, 'left': 758, 'position': 'absolute'});
+        bar = yHistoSvg.selectAll('g').data(yHisto).enter().append('g');
+        start = -15;
+        bar.append('rect')
+          .attr('y', function () {
+            return start += 15;
+          })
+          .attr('height', 15)
+          .attr('width', function (d) {
+            return d.length * 3;
+          });
+
       });
     }
 });
