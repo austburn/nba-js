@@ -4,8 +4,9 @@
   "description": "NBA analytics in JavaScript.",
   "main": "index.js",
   "scripts": {
-    "server": "npm run build && node server.js",
+    "start": "npm run build && node server.js",
     "build": "browserify app/app.js --transform reactify --outfile ./dist/app.js",
+    "dev": "watchify app/app.js --transform reactify --outfile ./dist/app.js",
     "test": "mocha test/"
   },
   "repository": {
@@ -20,11 +21,13 @@
   "homepage": "https://github.com/austburn/nba-js",
   "devDependencies": {
     "browserify": "^11.0.1",
+    "d3": "^3.5.6",
     "express": "^4.13.3",
-    "michaelangelo": "0.0.5",
+    "michaelangelo": "^0.1.2",
     "mocha": "^2.2.5",
     "raphael": "^2.1.4",
     "react": "^0.13.3",
-    "reactify": "^1.1.1"
+    "reactify": "^1.1.1",
+    "watchify": "^3.4.0"
   }
 }

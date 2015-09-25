@@ -7,8 +7,8 @@ Canvas = React.createClass({
     componentDidMount: function () {
         var width, height, args, components, paper;
 
-        width = this.props.data.canvas.width * this.props.data.canvas.ratio;
-        height = this.props.data.canvas.height * this.props.data.canvas.ratio;
+        width = this.props.data.canvas.width * this.props.data.canvas.scale;
+        height = this.props.data.canvas.height * this.props.data.canvas.scale;
         components = this.props.data.components.map(function (c) {
             return c.toRaphaelObject();
         });
