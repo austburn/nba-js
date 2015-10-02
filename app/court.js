@@ -35,7 +35,9 @@ CourtData = {
         // Inner Paint
         new Michaelangelo.Rectangle({x: 19, y:0, width: 12, height: 19}, opts),
         // no rebound zone
-        new Michaelangelo.Arc({cx:25, cy: 4.75, width: 6, height: 4, theta1: 180, theta2: 360}, opts)
+        new Michaelangelo.Arc({cx:25, cy: 4.75, width: 6, height: 4, theta1: 180, theta2: 360}, opts),
+        // half-court
+        new Michaelangelo.Path({x1: 0, y1: 47, x2: 50, y2: 47}, opts)
     ]
 };
 
@@ -69,7 +71,8 @@ Court = React.createClass({
           x = (shot[xIndex] + 250) * scaleRatio;
           y = (shot[yIndex] + 40) * scaleRatio;
           shotMade = shot[shotMadeIndex];
-          fill = shotMade ? '#c0392b' : '#27ae60';
+          fill = shotMade ? '#27ae60': '#c0392b';
+
           if (shotMade) {
             madeX.push(x);
             madeY.push(y);
@@ -90,6 +93,7 @@ Court = React.createClass({
                   (madeX);
 
         yHisto = d3.layout.histogram()
+                  .range([0, 900])
                   .bins(60)
                   (madeY);
 
@@ -102,9 +106,12 @@ Court = React.createClass({
           })
           .attr('width', 15)
           .attr('height', function (d) {
-            return d.length * 3;
+            return d.length * 1.5;
+          }).style({
+            'fill': '#bddfeb',
+            'stroke': '#272E31',
+            'stroke-width': '1px'
           });
-
         yHistoSvg = d3.select('body').append('svg').attr('width', 750).attr('height', 900).style({'top': 8, 'left': 758, 'position': 'absolute'});
         bar = yHistoSvg.selectAll('g').data(yHisto).enter().append('g');
         start = -15;
@@ -114,7 +121,11 @@ Court = React.createClass({
           })
           .attr('height', 15)
           .attr('width', function (d) {
-            return d.length * 3;
+            return d.length * 1.5;
+          }).style({
+            'fill': '#bddfeb',
+            'stroke': '#272E31',
+            'stroke-width': '1px'
           });
 
       });
