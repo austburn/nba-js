@@ -73,11 +73,6 @@ Court = React.createClass({
           shotMade = shot[shotMadeIndex];
           fill = shotMade ? '#27ae60': '#c0392b';
 
-          if (shotMade) {
-            madeX.push(x);
-            madeY.push(y);
-          }
-
           svg.append('circle')
             .attr('r', 3.5)
             .attr('cx', x)
@@ -90,11 +85,13 @@ Court = React.createClass({
         });
         xHisto = d3.layout.histogram()
                   .bins(50)
+                  .value(function (d) { return d.data })
                   (madeX);
 
         yHisto = d3.layout.histogram()
                   .range([0, 900])
                   .bins(60)
+                  .value(function (d) { return d.data })
                   (madeY);
 
         xHistoSvg = d3.select('body').append('svg').attr('width', 750).attr('height', 700);
@@ -105,8 +102,14 @@ Court = React.createClass({
             return start += 15;
           })
           .attr('width', 15)
-          .attr('height', function (d) {
-            return d.length * 1.5;
+          .attr('height', function (datapoints) {
+            var shotsMade;
+
+            shotsMade = datapoints.filter(function (d) {
+              return d.shotMade;
+            }).length;
+
+            return (shotsMade / (datapoints.length - shotsMade)) * 50;
           }).style({
             'fill': '#bddfeb',
             'stroke': '#272E31',
@@ -120,14 +123,19 @@ Court = React.createClass({
             return start += 15;
           })
           .attr('height', 15)
-          .attr('width', function (d) {
-            return d.length * 1.5;
+          .attr('width', function (datapoints) {
+            var shotsMade;
+
+            shotsMade = datapoints.filter(function (d) {
+              return d.shotMade;
+            }).length;
+
+            return (shotsMade / ((datapoints.length - shotsMade) || 1)) * 50;
           }).style({
             'fill': '#bddfeb',
             'stroke': '#272E31',
             'stroke-width': '1px'
           });
-
       });
     }
 });
