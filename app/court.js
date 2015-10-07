@@ -64,19 +64,21 @@ Court = React.createClass({
         yIndex = headers.indexOf('LOC_Y');
         shotMadeIndex = headers.indexOf('SHOT_MADE_FLAG');
 
-        shotData = json;
+        shotData = json.map(function (shot) {
+          return {
+            x: (shot[xIndex] + 250) * scaleRatio,
+            y: (shot[yIndex] + 40) * scaleRatio,
+            shotMade: shot[shotMadeIndex]
+          };
+        });
+
         shotData.forEach(function (shot) {
-          var x, y, shotMade, fill;
-
-          x = (shot[xIndex] + 250) * scaleRatio;
-          y = (shot[yIndex] + 40) * scaleRatio;
-          shotMade = shot[shotMadeIndex];
-          fill = shotMade ? '#27ae60': '#c0392b';
-
+          var fill;
+          fill = shot.shotMade ? '#27ae60': '#c0392b';
           svg.append('circle')
             .attr('r', 3.5)
-            .attr('cx', x)
-            .attr('cy', y)
+            .attr('cx', shot.x)
+            .attr('cy', shot.y)
             .style({
               'fill': fill,
               'stroke': '#7f8c8d',
@@ -85,15 +87,14 @@ Court = React.createClass({
         });
         xHisto = d3.layout.histogram()
                   .bins(50)
-                  .value(function (d) { return d.data })
-                  (madeX);
+                  .value(function (d) { return d.x })
+                  (shotData);
 
         yHisto = d3.layout.histogram()
                   .range([0, 900])
                   .bins(60)
-                  .value(function (d) { return d.data })
-                  (madeY);
-
+                  .value(function (d) { return d.y })
+                  (shotData);
         xHistoSvg = d3.select('body').append('svg').attr('width', 750).attr('height', 700);
         bar = xHistoSvg.selectAll('g').data(xHisto).enter().append('g');
         start = -15;
