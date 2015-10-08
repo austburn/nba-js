@@ -110,11 +110,39 @@ Court = React.createClass({
               return d.shotMade;
             }).length;
 
-            return (shotsMade / (datapoints.length - shotsMade)) * 50;
+            return (shotsMade / datapoints.length) * 50;
           }).style({
             'fill': '#bddfeb',
             'stroke': '#272E31',
             'stroke-width': '1px'
+          });
+
+        start = -15;
+        bar.append('text')
+          .attr('dy', '.75em')
+          .attr('x', function () {
+            return start += 15;
+          })
+          .attr('y', function (datapoints) {
+            var shotsMade;
+
+            shotsMade = datapoints.filter(function (d) {
+              return d.shotMade;
+            }).length;
+
+            return (shotsMade / datapoints.length) * 50;
+          })
+          .text(function (datapoints) {
+              var shotsMade;
+
+              shotsMade = datapoints.filter(function (d) {
+                return d.shotMade;
+              }).length;
+
+              return (shotsMade / datapoints.length).toPrecision(2);
+          })
+          .style({
+            'font-size': '.55em'
           });
         yHistoSvg = d3.select('body').append('svg').attr('width', 750).attr('height', 900).style({'top': 8, 'left': 758, 'position': 'absolute'});
         bar = yHistoSvg.selectAll('g').data(yHisto).enter().append('g');
@@ -131,11 +159,51 @@ Court = React.createClass({
               return d.shotMade;
             }).length;
 
-            return (shotsMade / ((datapoints.length - shotsMade) || 1)) * 50;
+            if (!(shotsMade && datapoints.length)) {
+              return 0;
+            }
+
+            return (shotsMade / datapoints.length) * 50;
           }).style({
             'fill': '#bddfeb',
             'stroke': '#272E31',
             'stroke-width': '1px'
+          });
+
+        start = -15;
+        bar.append('text')
+          .attr('dy', '1.25em')
+          .attr('x', function (datapoints) {
+            var shotsMade;
+
+            shotsMade = datapoints.filter(function (d) {
+              return d.shotMade;
+            }).length;
+
+            if (!(shotsMade && datapoints.length)) {
+              return 0;
+            }
+
+            return (shotsMade / datapoints.length) * 50;
+          })
+          .attr('y', function () {
+            return start += 15;
+          })
+          .text(function (datapoints) {
+              var shotsMade;
+
+              shotsMade = datapoints.filter(function (d) {
+                return d.shotMade;
+              }).length;
+
+              if (!(shotsMade && datapoints.length)) {
+                return 0;
+              }
+
+              return (shotsMade / datapoints.length).toPrecision(2);
+          })
+          .style({
+            'font-size': '.55em'
           });
       });
     }
