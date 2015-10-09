@@ -57,7 +57,7 @@ Court = React.createClass({
       madeY = [];
       svg = d3.select('#canvas').select('svg');
       d3.json("http://localhost:3030/data?id=201935", function (err, json) {
-        var headers, shotData, xIndex, yIndex, shotMadeIndex;
+        var headers, shotData, xIndex, yIndex, shotMadeIndex, determinePercentage;
 
         headers = json.pop();
         xIndex = headers.indexOf('LOC_X');
@@ -71,6 +71,20 @@ Court = React.createClass({
             shotMade: shot[shotMadeIndex]
           };
         });
+
+        determinePercentage = function (datapoints) {
+            var shotsMade;
+
+            shotsMade = datapoints.filter(function (d) {
+              return d.shotMade;
+            }).length;
+
+            if (!(shotsMade && datapoints.length)) {
+              return 0;
+            }
+
+            return shotsMade/datapoints.length;
+        };
 
         shotData.forEach(function (shot) {
           var fill;
@@ -104,13 +118,9 @@ Court = React.createClass({
           })
           .attr('width', 15)
           .attr('height', function (datapoints) {
-            var shotsMade;
-
-            shotsMade = datapoints.filter(function (d) {
-              return d.shotMade;
-            }).length;
-
-            return (shotsMade / datapoints.length) * 50;
+            var percentage;
+            percentage = determinePercentage(datapoints);
+            return percentage * 50;
           }).style({
             'fill': '#bddfeb',
             'stroke': '#272E31',
@@ -124,22 +134,14 @@ Court = React.createClass({
             return start += 15;
           })
           .attr('y', function (datapoints) {
-            var shotsMade;
-
-            shotsMade = datapoints.filter(function (d) {
-              return d.shotMade;
-            }).length;
-
-            return (shotsMade / datapoints.length) * 50;
+            var percentage;
+            percentage = determinePercentage(datapoints);
+            return percentage * 50;
           })
           .text(function (datapoints) {
-              var shotsMade;
-
-              shotsMade = datapoints.filter(function (d) {
-                return d.shotMade;
-              }).length;
-
-              return (shotsMade / datapoints.length).toPrecision(2);
+            var percentage;
+            percentage = determinePercentage(datapoints);
+            return percentage.toPrecision(2);
           })
           .style({
             'font-size': '.55em'
@@ -153,17 +155,9 @@ Court = React.createClass({
           })
           .attr('height', 15)
           .attr('width', function (datapoints) {
-            var shotsMade;
-
-            shotsMade = datapoints.filter(function (d) {
-              return d.shotMade;
-            }).length;
-
-            if (!(shotsMade && datapoints.length)) {
-              return 0;
-            }
-
-            return (shotsMade / datapoints.length) * 50;
+            var percentage;
+            percentage = determinePercentage(datapoints);
+            return percentage * 50;
           }).style({
             'fill': '#bddfeb',
             'stroke': '#272E31',
@@ -174,33 +168,17 @@ Court = React.createClass({
         bar.append('text')
           .attr('dy', '1.25em')
           .attr('x', function (datapoints) {
-            var shotsMade;
-
-            shotsMade = datapoints.filter(function (d) {
-              return d.shotMade;
-            }).length;
-
-            if (!(shotsMade && datapoints.length)) {
-              return 0;
-            }
-
-            return (shotsMade / datapoints.length) * 50;
+            var percentage;
+            percentage = determinePercentage(datapoints);
+            return percentage * 50;
           })
           .attr('y', function () {
             return start += 15;
           })
           .text(function (datapoints) {
-              var shotsMade;
-
-              shotsMade = datapoints.filter(function (d) {
-                return d.shotMade;
-              }).length;
-
-              if (!(shotsMade && datapoints.length)) {
-                return 0;
-              }
-
-              return (shotsMade / datapoints.length).toPrecision(2);
+            var percentage;
+            percentage = determinePercentage(datapoints);
+            return percentage.toPrecision(2);
           })
           .style({
             'font-size': '.55em'
