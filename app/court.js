@@ -72,6 +72,34 @@ Court = React.createClass({
           };
         });
 
+        createHistogramSvgElements = function (bins, range, attribute, shotData) {
+          var histo, svg;
+          histo = d3.layout.histogram()
+                    .range(range)
+                    .bins(bins)
+                    .value(function (d) { return d[attribute] })
+                    (shotData);
+          if (attribute === 'x') {
+            width = range[1];
+            height = 50;
+          } else {
+            width = 50;
+            height = range[1];
+          }
+
+          svg = d3.select('body')
+                  .append('svg')
+                  .attr('width', width)
+                  .attr('height', height)
+                  .attr('class', attribute + '-histo');
+          bars = svg.selectAll('g')
+                    .data(histo)
+                    .enter()
+                    .append('g');
+
+          return bars;
+        };
+
         determinePercentage = function (datapoints) {
             var shotsMade;
 
@@ -99,20 +127,11 @@ Court = React.createClass({
               'stroke-width': '1px'
             });
         });
-        xHisto = d3.layout.histogram()
-                  .bins(50)
-                  .value(function (d) { return d.x })
-                  (shotData);
+        xHistoBars = createHistogramSvgElements(CourtData.canvas.width, [0, CourtData.canvas.width * CourtData.canvas.scale], 'x', shotData);
+        yHistoBars = createHistogramSvgElements(CourtData.canvas.height, [0, CourtData.canvas.height * CourtData.canvas.scale], 'y', shotData);
 
-        yHisto = d3.layout.histogram()
-                  .range([0, 900])
-                  .bins(60)
-                  .value(function (d) { return d.y })
-                  (shotData);
-        xHistoSvg = d3.select('body').append('svg').attr('width', 750).attr('height', 700);
-        bar = xHistoSvg.selectAll('g').data(xHisto).enter().append('g');
         start = -15;
-        bar.append('rect')
+        xHistoBars.append('rect')
           .attr('x', function () {
             return start += 15;
           })
@@ -128,7 +147,7 @@ Court = React.createClass({
           });
 
         start = -15;
-        bar.append('text')
+        xHistoBars.append('text')
           .attr('dy', '.75em')
           .attr('x', function () {
             return start += 15;
@@ -146,10 +165,9 @@ Court = React.createClass({
           .style({
             'font-size': '.55em'
           });
-        yHistoSvg = d3.select('body').append('svg').attr('width', 750).attr('height', 900).style({'top': 8, 'left': 758, 'position': 'absolute'});
-        bar = yHistoSvg.selectAll('g').data(yHisto).enter().append('g');
+
         start = -15;
-        bar.append('rect')
+        yHistoBars.append('rect')
           .attr('y', function () {
             return start += 15;
           })
@@ -165,7 +183,7 @@ Court = React.createClass({
           });
 
         start = -15;
-        bar.append('text')
+        yHistoBars.append('text')
           .attr('dy', '1.25em')
           .attr('x', function (datapoints) {
             var percentage;
