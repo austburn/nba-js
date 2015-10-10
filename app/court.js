@@ -83,6 +83,7 @@ Court = React.createClass({
                     (shotData);
 
           bars = generateSvgElements(histogram, upperRange, scale, attribute);
+          addRects(bars);
           return bars;
         };
 
@@ -117,6 +118,23 @@ Court = React.createClass({
           return bars;
         };
 
+        addRects = function (bars, attribute) {
+          var associateAttribute, oppositeAttribute;
+          associateAttribute = attribute === 'x' ? 'width' : 'height';
+          oppositeAttribute = attribute === 'x' ? 'height' : 'width';
+          bars.append('rect')
+              .attr(associateAttribute, 15)
+              .attr(oppositeAttribute, function (datapoints) {
+                var percentage;
+                percentage = determinePercentage(datapoints);
+                return percentage * 50;
+              }).style({
+                'fill': '#bddfeb',
+                'stroke': '#272E31',
+                'stroke-width': '1px'
+              });
+        };
+
         determinePercentage = function (datapoints) {
             var shotsMade;
 
@@ -147,18 +165,6 @@ Court = React.createClass({
         xHistoBars = createHistogram(CourtData.canvas.width, CourtData.canvas.scale, 'x', shotData);
         yHistoBars = createHistogram(CourtData.canvas.height, CourtData.canvas.scale, 'y', shotData);
 
-        xHistoBars.append('rect')
-          .attr('width', 15)
-          .attr('height', function (datapoints) {
-            var percentage;
-            percentage = determinePercentage(datapoints);
-            return percentage * 50;
-          }).style({
-            'fill': '#bddfeb',
-            'stroke': '#272E31',
-            'stroke-width': '1px'
-          });
-
         xHistoBars.append('text')
           .attr('dy', '.75em')
           .attr('y', function (datapoints) {
@@ -173,18 +179,6 @@ Court = React.createClass({
           })
           .style({
             'font-size': '.55em'
-          });
-
-        yHistoBars.append('rect')
-          .attr('height', 15)
-          .attr('width', function (datapoints) {
-            var percentage;
-            percentage = determinePercentage(datapoints);
-            return percentage * 50;
-          }).style({
-            'fill': '#bddfeb',
-            'stroke': '#272E31',
-            'stroke-width': '1px'
           });
 
         yHistoBars.append('text')
