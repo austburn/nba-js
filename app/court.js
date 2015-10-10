@@ -83,8 +83,8 @@ Court = React.createClass({
                     (shotData);
 
           bars = generateSvgElements(histogram, upperRange, scale, attribute);
-          addRects(bars);
-          return bars;
+          addRects(bars, attribute);
+          addText(bars, attribute);
         };
 
         generateSvgElements = function (histogram, upperRange, scale, attribute) {
@@ -135,6 +135,26 @@ Court = React.createClass({
               });
         };
 
+        addText = function (bars, attribute) {
+          var oppositeAttribute;
+          oppositeAttribute = attribute === 'x' ? 'y' : 'x';
+          bars.append('text')
+              .attr('dy', '1.25em')
+              .attr(oppositeAttribute, function (datapoints) {
+                var percentage;
+                percentage = determinePercentage(datapoints);
+                return percentage * 50;
+              })
+              .text(function (datapoints) {
+                var percentage;
+                percentage = determinePercentage(datapoints);
+                return percentage.toPrecision(2);
+              })
+              .style({
+                'font-size': '.55em'
+              });
+        };
+
         determinePercentage = function (datapoints) {
             var shotsMade;
 
@@ -162,40 +182,9 @@ Court = React.createClass({
               'stroke-width': '1px'
             });
         });
-        xHistoBars = createHistogram(CourtData.canvas.width, CourtData.canvas.scale, 'x', shotData);
-        yHistoBars = createHistogram(CourtData.canvas.height, CourtData.canvas.scale, 'y', shotData);
 
-        xHistoBars.append('text')
-          .attr('dy', '.75em')
-          .attr('y', function (datapoints) {
-            var percentage;
-            percentage = determinePercentage(datapoints);
-            return percentage * 50;
-          })
-          .text(function (datapoints) {
-            var percentage;
-            percentage = determinePercentage(datapoints);
-            return percentage.toPrecision(2);
-          })
-          .style({
-            'font-size': '.55em'
-          });
-
-        yHistoBars.append('text')
-          .attr('dy', '1.25em')
-          .attr('x', function (datapoints) {
-            var percentage;
-            percentage = determinePercentage(datapoints);
-            return percentage * 50;
-          })
-          .text(function (datapoints) {
-            var percentage;
-            percentage = determinePercentage(datapoints);
-            return percentage.toPrecision(2);
-          })
-          .style({
-            'font-size': '.55em'
-          });
+        createHistogram(CourtData.canvas.width, CourtData.canvas.scale, 'x', shotData);
+        createHistogram(CourtData.canvas.height, CourtData.canvas.scale, 'y', shotData);
       });
     }
 });
