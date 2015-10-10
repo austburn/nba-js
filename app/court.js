@@ -72,19 +72,22 @@ Court = React.createClass({
           };
         });
 
-        createHistogramSvgElements = function (bins, range, attribute, shotData) {
-          var histo, svg;
+        createHistogramSvgElements = function (bins, scale, attribute, shotData) {
+          var histo, svg, width, upperRange, height, range, bars;
+          upperRange = bins * scale;
+
           histo = d3.layout.histogram()
-                    .range(range)
+                    .range([0, upperRange])
                     .bins(bins)
                     .value(function (d) { return d[attribute] })
                     (shotData);
+
           if (attribute === 'x') {
-            width = range[1];
+            width = upperRange;
             height = 50;
           } else {
             width = 50;
-            height = range[1];
+            height = upperRange;
           }
 
           svg = d3.select('body')
@@ -92,10 +95,18 @@ Court = React.createClass({
                   .attr('width', width)
                   .attr('height', height)
                   .attr('class', attribute + '-histo');
+
+          range = d3.range(0, upperRange, scale).reverse();
           bars = svg.selectAll('g')
                     .data(histo)
                     .enter()
-                    .append('g');
+                    .append('g')
+                    .attr('transform', function () {
+                      var value, translation;
+                      value = range.pop();
+                      translation = attribute === 'x' ? value + ',0' : '0,' + value;
+                      return 'translate(' + translation + ')';
+                    });
 
           return bars;
         };
@@ -127,14 +138,10 @@ Court = React.createClass({
               'stroke-width': '1px'
             });
         });
-        xHistoBars = createHistogramSvgElements(CourtData.canvas.width, [0, CourtData.canvas.width * CourtData.canvas.scale], 'x', shotData);
-        yHistoBars = createHistogramSvgElements(CourtData.canvas.height, [0, CourtData.canvas.height * CourtData.canvas.scale], 'y', shotData);
+        xHistoBars = createHistogramSvgElements(CourtData.canvas.width, CourtData.canvas.scale, 'x', shotData);
+        yHistoBars = createHistogramSvgElements(CourtData.canvas.height, CourtData.canvas.scale, 'y', shotData);
 
-        start = -15;
         xHistoBars.append('rect')
-          .attr('x', function () {
-            return start += 15;
-          })
           .attr('width', 15)
           .attr('height', function (datapoints) {
             var percentage;
@@ -146,12 +153,8 @@ Court = React.createClass({
             'stroke-width': '1px'
           });
 
-        start = -15;
         xHistoBars.append('text')
           .attr('dy', '.75em')
-          .attr('x', function () {
-            return start += 15;
-          })
           .attr('y', function (datapoints) {
             var percentage;
             percentage = determinePercentage(datapoints);
@@ -166,11 +169,7 @@ Court = React.createClass({
             'font-size': '.55em'
           });
 
-        start = -15;
         yHistoBars.append('rect')
-          .attr('y', function () {
-            return start += 15;
-          })
           .attr('height', 15)
           .attr('width', function (datapoints) {
             var percentage;
@@ -182,16 +181,12 @@ Court = React.createClass({
             'stroke-width': '1px'
           });
 
-        start = -15;
         yHistoBars.append('text')
           .attr('dy', '1.25em')
           .attr('x', function (datapoints) {
             var percentage;
             percentage = determinePercentage(datapoints);
             return percentage * 50;
-          })
-          .attr('y', function () {
-            return start += 15;
           })
           .text(function (datapoints) {
             var percentage;
