@@ -72,15 +72,22 @@ Court = React.createClass({
           };
         });
 
-        createHistogramSvgElements = function (bins, scale, attribute, shotData) {
-          var histo, svg, width, upperRange, height, range, bars;
+        createHistogram = function (bins, scale, attribute, shotData) {
+          var histogram, svg, width, upperRange, height, range, bars;
           upperRange = bins * scale;
 
-          histo = d3.layout.histogram()
+          histogram = d3.layout.histogram()
                     .range([0, upperRange])
                     .bins(bins)
                     .value(function (d) { return d[attribute] })
                     (shotData);
+
+          bars = generateSvgElements(histogram, upperRange, scale, attribute);
+          return bars;
+        };
+
+        generateSvgElements = function (histogram, upperRange, scale, attribute) {
+          var width, height, svg, range, bars;
 
           if (attribute === 'x') {
             width = upperRange;
@@ -98,7 +105,7 @@ Court = React.createClass({
 
           range = d3.range(0, upperRange, scale).reverse();
           bars = svg.selectAll('g')
-                    .data(histo)
+                    .data(histogram)
                     .enter()
                     .append('g')
                     .attr('transform', function () {
@@ -107,7 +114,6 @@ Court = React.createClass({
                       translation = attribute === 'x' ? value + ',0' : '0,' + value;
                       return 'translate(' + translation + ')';
                     });
-
           return bars;
         };
 
@@ -138,8 +144,8 @@ Court = React.createClass({
               'stroke-width': '1px'
             });
         });
-        xHistoBars = createHistogramSvgElements(CourtData.canvas.width, CourtData.canvas.scale, 'x', shotData);
-        yHistoBars = createHistogramSvgElements(CourtData.canvas.height, CourtData.canvas.scale, 'y', shotData);
+        xHistoBars = createHistogram(CourtData.canvas.width, CourtData.canvas.scale, 'x', shotData);
+        yHistoBars = createHistogram(CourtData.canvas.height, CourtData.canvas.scale, 'y', shotData);
 
         xHistoBars.append('rect')
           .attr('width', 15)
