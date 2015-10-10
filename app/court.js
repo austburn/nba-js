@@ -1,9 +1,10 @@
-var React, d3, Canvas, CourtData, opts, Michaelangelo, Court;
+var React, d3, Canvas, CourtData, opts, Michaelangelo, Court, createHistogram;
 
 React = require('react');
 d3 = require('d3');
 Canvas = require('./canvas');
 Michaelangelo = require('michaelangelo');
+createHistogram = require('./createHistogram');
 
 opts = {
     'stroke-width': 2,
@@ -53,11 +54,9 @@ Court = React.createClass({
       nbaStatsScale = 10;
       scaleRatio = canvasScale / nbaStatsScale;
 
-      madeX = [];
-      madeY = [];
       svg = d3.select('#canvas').select('svg');
       d3.json("http://localhost:3030/data?id=201935", function (err, json) {
-        var headers, shotData, xIndex, yIndex, shotMadeIndex;
+        var headers, shotData, xIndex, yIndex, shotMadeIndex, determinePercentage;
 
         headers = json.pop();
         xIndex = headers.indexOf('LOC_X');
@@ -85,126 +84,9 @@ Court = React.createClass({
               'stroke-width': '1px'
             });
         });
-        xHisto = d3.layout.histogram()
-                  .bins(50)
-                  .value(function (d) { return d.x })
-                  (shotData);
 
-        yHisto = d3.layout.histogram()
-                  .range([0, 900])
-                  .bins(60)
-                  .value(function (d) { return d.y })
-                  (shotData);
-        xHistoSvg = d3.select('body').append('svg').attr('width', 750).attr('height', 700);
-        bar = xHistoSvg.selectAll('g').data(xHisto).enter().append('g');
-        start = -15;
-        bar.append('rect')
-          .attr('x', function () {
-            return start += 15;
-          })
-          .attr('width', 15)
-          .attr('height', function (datapoints) {
-            var shotsMade;
-
-            shotsMade = datapoints.filter(function (d) {
-              return d.shotMade;
-            }).length;
-
-            return (shotsMade / datapoints.length) * 50;
-          }).style({
-            'fill': '#bddfeb',
-            'stroke': '#272E31',
-            'stroke-width': '1px'
-          });
-
-        start = -15;
-        bar.append('text')
-          .attr('dy', '.75em')
-          .attr('x', function () {
-            return start += 15;
-          })
-          .attr('y', function (datapoints) {
-            var shotsMade;
-
-            shotsMade = datapoints.filter(function (d) {
-              return d.shotMade;
-            }).length;
-
-            return (shotsMade / datapoints.length) * 50;
-          })
-          .text(function (datapoints) {
-              var shotsMade;
-
-              shotsMade = datapoints.filter(function (d) {
-                return d.shotMade;
-              }).length;
-
-              return (shotsMade / datapoints.length).toPrecision(2);
-          })
-          .style({
-            'font-size': '.55em'
-          });
-        yHistoSvg = d3.select('body').append('svg').attr('width', 750).attr('height', 900).style({'top': 8, 'left': 758, 'position': 'absolute'});
-        bar = yHistoSvg.selectAll('g').data(yHisto).enter().append('g');
-        start = -15;
-        bar.append('rect')
-          .attr('y', function () {
-            return start += 15;
-          })
-          .attr('height', 15)
-          .attr('width', function (datapoints) {
-            var shotsMade;
-
-            shotsMade = datapoints.filter(function (d) {
-              return d.shotMade;
-            }).length;
-
-            if (!(shotsMade && datapoints.length)) {
-              return 0;
-            }
-
-            return (shotsMade / datapoints.length) * 50;
-          }).style({
-            'fill': '#bddfeb',
-            'stroke': '#272E31',
-            'stroke-width': '1px'
-          });
-
-        start = -15;
-        bar.append('text')
-          .attr('dy', '1.25em')
-          .attr('x', function (datapoints) {
-            var shotsMade;
-
-            shotsMade = datapoints.filter(function (d) {
-              return d.shotMade;
-            }).length;
-
-            if (!(shotsMade && datapoints.length)) {
-              return 0;
-            }
-
-            return (shotsMade / datapoints.length) * 50;
-          })
-          .attr('y', function () {
-            return start += 15;
-          })
-          .text(function (datapoints) {
-              var shotsMade;
-
-              shotsMade = datapoints.filter(function (d) {
-                return d.shotMade;
-              }).length;
-
-              if (!(shotsMade && datapoints.length)) {
-                return 0;
-              }
-
-              return (shotsMade / datapoints.length).toPrecision(2);
-          })
-          .style({
-            'font-size': '.55em'
-          });
+        createHistogram(CourtData.canvas.width, CourtData.canvas.scale, 'x', shotData);
+        createHistogram(CourtData.canvas.height, CourtData.canvas.scale, 'y', shotData);
       });
     }
 });
