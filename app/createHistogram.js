@@ -1,23 +1,41 @@
-var d3, generateSvgElements, addRects, addText, determinePercentage;
+var d3, attributeMap, generateSvgElements, addRects, addText, determinePercentage;
 
 d3 = require('d3');
 
-generateSvgElements = function (histogram, upperRange, scale, attribute) {
-  var width, height, svg, range, bars;
-
-  if (attribute === 'x') {
-    width = upperRange;
-    height = 50;
-  } else {
-    width = 50;
-    height = upperRange;
+attributeMap = {
+  x: {
+    name: 'x',
+    opposite: 'y',
+    translation: '{value},0',
+    widthAttribute: 'width',
+    boxWidthAttribute: 'width',
+    boxHeightAttribute: 'height'
+  },
+  y: {
+    name: 'y',
+    opposite: 'x',
+    translation: '0,{value}',
+    widthAttribute: 'height',
+    boxWidthAttribute: 'height',
+    boxHeightAttribute: 'width'
   }
+};
+
+String.prototype.format = function (keys) {
+  var newStr;
+  for (key in keys) {
+    newStr = this.replace('{' + key + '}', keys[key]);
+  }
+  return newStr;
+};
+
+generateSvgElements = function (histogram, upperRange, scale, attribute) {
+  var svg, range, bars;
 
   svg = d3.select('body')
           .append('svg')
-          .attr('width', width)
-          .attr('height', height)
-          .attr('class', attribute + '-histo');
+          .attr(attribute.widthAttribute, upperRange)
+          .attr('class', attribute.name + '-histo');
 
   range = d3.range(0, upperRange, scale).reverse();
   bars = svg.selectAll('g')
@@ -27,19 +45,15 @@ generateSvgElements = function (histogram, upperRange, scale, attribute) {
             .attr('transform', function () {
               var value, translation;
               value = range.pop();
-              translation = attribute === 'x' ? value + ',0' : '0,' + value;
-              return 'translate(' + translation + ')';
+              return 'translate(' + attribute.translation.format({'value': value}) + ')';
             });
   return bars;
 };
 
 addRects = function (bars, attribute) {
-  var associateAttribute, oppositeAttribute;
-  associateAttribute = attribute === 'x' ? 'width' : 'height';
-  oppositeAttribute = attribute === 'x' ? 'height' : 'width';
   bars.append('rect')
-      .attr(associateAttribute, 15)
-      .attr(oppositeAttribute, function (datapoints) {
+      .attr(attribute.boxWidthAttribute, 15)
+      .attr(attribute.boxHeightAttribute, function (datapoints) {
         var percentage;
         percentage = determinePercentage(datapoints);
         return percentage * 50;
@@ -51,11 +65,9 @@ addRects = function (bars, attribute) {
 };
 
 addText = function (bars, attribute) {
-  var oppositeAttribute;
-  oppositeAttribute = attribute === 'x' ? 'y' : 'x';
   bars.append('text')
       .attr('dy', '1.25em')
-      .attr(oppositeAttribute, function (datapoints) {
+      .attr(attribute.opposite, function (datapoints) {
         var percentage;
         percentage = determinePercentage(datapoints);
         return percentage * 50;
@@ -85,7 +97,7 @@ determinePercentage = function (datapoints) {
 };
 
 module.exports = function (bins, scale, attribute, shotData) {
-  var histogram, svg, width, upperRange, height, range, bars;
+  var histogram, upperRange, bars;
   upperRange = bins * scale;
 
   histogram = d3.layout.histogram()
@@ -94,7 +106,7 @@ module.exports = function (bins, scale, attribute, shotData) {
             .value(function (d) { return d[attribute] })
             (shotData);
 
-  bars = generateSvgElements(histogram, upperRange, scale, attribute);
-  addRects(bars, attribute);
-  addText(bars, attribute);
+  bars = generateSvgElements(histogram, upperRange, scale, attributeMap[attribute]);
+  addRects(bars, attributeMap[attribute]);
+  addText(bars, attributeMap[attribute]);
 };
