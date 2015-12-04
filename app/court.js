@@ -85,8 +85,36 @@ Court = React.createClass({
             });
         });
 
-        createHistogram(CourtData.canvas.width, CourtData.canvas.scale, 'x', shotData);
-        createHistogram(CourtData.canvas.height, CourtData.canvas.scale, 'y', shotData);
+        xHisto = createHistogram(CourtData.canvas.width, CourtData.canvas.scale, 'x', shotData);
+        yHisto = createHistogram(CourtData.canvas.height, CourtData.canvas.scale, 'y', shotData);
+
+        yHisto.forEach(function (yShots, yIndex) {
+          xHisto.forEach(function (xShots, xIndex) {
+            var allShots, made;
+            allShots = xShots.concat(yShots);
+            made = allShots.filter(function (shot) { return shot.shotMade }).length;
+            if (allShots.length == 0) {
+              percentage = 0;
+            } else {
+              percentage = made / allShots.length;
+            }
+
+            xPoint = xIndex * 15;
+            yPoint = yIndex * 15;
+            color = percentage < 0.5 ? 'red' : 'green';
+
+            svg.append('rect')
+              .attr('x', xPoint)
+              .attr('y', yPoint)
+              .attr('height', 15)
+              .attr('width', 15)
+              .style({
+                'fill': color,
+                'opacity': 0.5
+              });
+          });
+        });
+
       });
     }
 });

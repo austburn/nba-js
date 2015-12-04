@@ -106,7 +106,5 @@ module.exports = function (bins, scale, attribute, shotData) {
             .value(function (d) { return d[attribute] })
             (shotData);
 
-  bars = generateSvgElements(histogram, upperRange, scale, attributeMap[attribute]);
-  addRects(bars, attributeMap[attribute]);
-  addText(bars, attributeMap[attribute]);
+  return histogram;
 };
