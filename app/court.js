@@ -113,7 +113,12 @@ Court = React.createClass({
             }
 
             style = heat(percentage);
-
+            if (allShots.length == 0) {
+              style = {
+                fill: 'white',
+                opacity: 0
+              };
+            }
             svg.append('rect')
               .attr('x', box.x1)
               .attr('y', box.y1)
