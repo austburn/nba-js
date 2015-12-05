@@ -5,6 +5,7 @@ d3 = require('d3');
 Canvas = require('./canvas');
 Michaelangelo = require('michaelangelo');
 createHistogram = require('./createHistogram');
+heat = require('./heat');
 
 opts = {
     'stroke-width': 2,
@@ -90,8 +91,20 @@ Court = React.createClass({
 
         yHisto.forEach(function (yShots, yIndex) {
           xHisto.forEach(function (xShots, xIndex) {
-            var allShots, made;
+            var allShots, made, box;
+            box = {
+              x1: xIndex * 15,
+              y1: yIndex * 15,
+              x2: (xIndex + 1) * 15,
+              y2: (yIndex + 1) * 15
+            };
             allShots = xShots.concat(yShots);
+            allShots = allShots.filter(function (shot) {
+              return shot.x >= box.x1 &&
+                     shot.x < box.x2 &&
+                     shot.y >= box.y1 &&
+                     shot.y < box.y2;
+            });
             made = allShots.filter(function (shot) { return shot.shotMade }).length;
             if (allShots.length == 0) {
               percentage = 0;
@@ -99,19 +112,14 @@ Court = React.createClass({
               percentage = made / allShots.length;
             }
 
-            xPoint = xIndex * 15;
-            yPoint = yIndex * 15;
-            color = percentage < 0.5 ? 'red' : 'green';
+            style = heat(percentage);
 
             svg.append('rect')
-              .attr('x', xPoint)
-              .attr('y', yPoint)
+              .attr('x', box.x1)
+              .attr('y', box.y1)
               .attr('height', 15)
               .attr('width', 15)
-              .style({
-                'fill': color,
-                'opacity': 0.5
-              });
+              .style(style);
           });
         });
 
